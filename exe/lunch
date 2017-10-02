@@ -8,6 +8,7 @@ require "lunch"
 
 
 
+$zomato = Zomato::Api.new
 
 
 
@@ -19,10 +20,11 @@ require "lunch"
 
 # File.open("data/chosen.json",'w') do |f|
 #   all   = []
-#   names = [ 'Incruenti', 'Moment', 'Plevel', 'Akropolis', 'Etnosvět' ]
+#   names = [ 'Incruenti', 'Moment', 'Plevel', 'Akropolis',
+#   'Etnosvět', 'Gouranga' ]
   
 #   all = names.map do |name|
-#     zomato.restaurant(city_id: 84, q: name)
+#     $zomato.restaurant(city_id: 84, q: name)
 #   end
 
 #   f.write(all.to_json)
@@ -33,7 +35,7 @@ restaurants = JSON.parse(File.read('data/chosen.json')).map do |json|
   OpenStruct.new(json['restaurant'])
 end
 
-$zomato = Zomato::Api.new
+
 
 
 def print_menu(restaurant)
@@ -54,15 +56,7 @@ end
 
 
 restaurants.each do |r|
+  next unless r.name =~ /Incruenti|Akropolis/
   print_menu(r)
   puts "\n\n"  
 end
-
-
-
-
-
-
-
-
-
