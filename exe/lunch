@@ -7,56 +7,8 @@ require "dotenv/load"
 require "lunch"
 
 
-
-$zomato = Zomato::Api.new
-
-
-
-# File.open("data/vegetarian.json",'w') do |f|
-#   r = zomato.restaurants(city_id: 84, cuisine_id: 308)
-#   f.write(r.to_json)
-# end
-
-
-# File.open("data/chosen.json",'w') do |f|
-#   all   = []
-#   names = [ 'Incruenti', 'Moment', 'Plevel', 'Akropolis',
-#   'Etnosvět', 'Gouranga' ]
-  
-#   all = names.map do |name|
-#     $zomato.restaurant(city_id: 84, q: name)
-#   end
-
-#   f.write(all.to_json)
-# end  
-
-
-restaurants = JSON.parse(File.read('data/chosen.json')).map do |json|
-  OpenStruct.new(json['restaurant'])
-end
+Lunch::Cli.new.run
 
 
 
 
-def print_menu(restaurant)
-  puts restaurant.name
-  puts '---------------------------------------------'
-  
-  if menu = $zomato.daily_menu(restaurant.id)
-    menu['dishes'].each_with_index do |dish,i|
-      dish = OpenStruct.new(dish['dish'])
-      puts "#{i+1}) #{dish.name} - #{dish.price}"
-    end
-  else
-    puts 'No daily menu found.'
-  end
-end
-
-
-
-
-restaurants.each do |r|
-  next unless r.name =~ /Incruenti|Akropolis/
-  print_menu(r)
-  puts "\n\n"  
-end

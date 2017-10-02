@@ -11,7 +11,14 @@ module Zomato
 
     def restaurant(query)
       json = get('/search', query)
-      json['restaurants'].first
+
+      if r = json['restaurants'].first
+        attrs = r['restaurant']
+        attrs.delete('apikey')
+        attrs
+      else
+        nil
+      end
     end
 
     def daily_menu(id)
