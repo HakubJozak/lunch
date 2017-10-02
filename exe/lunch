@@ -1,5 +1,6 @@
 
 require 'rubygems'
 require 'zomato'
+require 'dotenv/load'
 
-zomato = Zomato::Base.new('key')
+zomato = Zomato::Base.new(ENV['ZOMATO_KEY'])
