@@ -7,7 +7,7 @@ require "dotenv/load"
 require "lunch"
 
 
-zomato = Zomato::Api.new
+
 
 
 
@@ -33,20 +33,29 @@ restaurants = JSON.parse(File.read('data/chosen.json')).map do |json|
   OpenStruct.new(json['restaurant'])
 end
 
+$zomato = Zomato::Api.new
 
-r = restaurants.first
-menu = zomato.daily_menu(r.id)
 
-puts r.name
-puts '---------------------------------------------'
-menu['dishes'].each_with_index do |dish,i|
-  dish = OpenStruct.new(dish['dish'])
-  puts "#{i+1}) #{dish.name} - #{dish.price}"
+def print_menu(restaurant)
+  puts restaurant.name
+  puts '---------------------------------------------'
+  
+  if menu = $zomato.daily_menu(restaurant.id)
+    menu['dishes'].each_with_index do |dish,i|
+      dish = OpenStruct.new(dish['dish'])
+      puts "#{i+1}) #{dish.name} - #{dish.price}"
+    end
+  else
+    puts 'No daily menu found.'
+  end
 end
 
-puts "\n\n"
+
+
 
 restaurants.each do |r|
+  print_menu(r)
+  puts "\n\n"  
 end
 
 

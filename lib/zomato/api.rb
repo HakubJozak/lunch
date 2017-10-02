@@ -17,8 +17,10 @@ module Zomato
     def daily_menu(id)
       json = get('/dailymenu', res_id: id)
       # FFS!
-      if m = json['daily_menus']
-        m.first['daily_menu']
+      if list = json['daily_menus']
+        if menu = list.first
+          menu['daily_menu']
+        end
       end
     end
 
