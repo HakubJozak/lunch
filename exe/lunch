@@ -1,6 +1,59 @@
+#!/home/jakub/.rvm/rubies/ruby-2.4.0/bin/ruby
+# coding: utf-8
 
-require 'rubygems'
-require 'zomato'
-require 'dotenv/load'
 
-zomato = Zomato::Base.new(ENV['ZOMATO_KEY'])
+require "bundler/setup"
+require "dotenv/load"
+require "lunch"
+
+
+zomato = Zomato::Api.new
+
+
+
+# File.open("data/vegetarian.json",'w') do |f|
+#   r = zomato.restaurants(city_id: 84, cuisine_id: 308)
+#   f.write(r.to_json)
+# end
+
+
+# File.open("data/chosen.json",'w') do |f|
+#   all   = []
+#   names = [ 'Incruenti', 'Moment', 'Plevel', 'Akropolis', 'Etnosvět' ]
+  
+#   all = names.map do |name|
+#     zomato.restaurant(city_id: 84, q: name)
+#   end
+
+#   f.write(all.to_json)
+# end  
+
+
+restaurants = JSON.parse(File.read('data/chosen.json')).map do |json|
+  OpenStruct.new(json['restaurant'])
+end
+
+
+r = restaurants.first
+menu = zomato.daily_menu(r.id)
+
+puts r.name
+puts '---------------------------------------------'
+menu['dishes'].each_with_index do |dish,i|
+  dish = OpenStruct.new(dish['dish'])
+  puts "#{i+1}) #{dish.name} - #{dish.price}"
+end
+
+puts "\n\n"
+
+restaurants.each do |r|
+end
+
+
+
+
+
+
+
+
+
