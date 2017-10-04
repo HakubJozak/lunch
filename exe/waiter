@@ -1,0 +1,10 @@
+#!/home/jakub/.rvm/rubies/ruby-2.4.0/bin/ruby
+# coding: utf-8
+
+
+require "bundler/setup"
+require "dotenv/load"
+require "lunch/waiter"
+
+
+Lunch::Waiter.run

@@ -3,7 +3,9 @@ require_relative "zomato/api"
 require_relative "zomato/city"
 
 require_relative "lunch/version"
+require_relative "lunch/lookup"
 require_relative "lunch/cli"
+require_relative "lunch/offer"
 
 require 'fileutils'
 
