@@ -12,36 +12,44 @@ module Lunch
     end
 
     def save!
-      File.open(data_file,'w') do |f|
-        f.write({
+      json = {
           groups: @groups,
           restaurants: @restaurants.uniq.map(&:to_h)
-        }.to_json)
-      end    
+        }.to_json
+
+      File.open(data_file,'w') do |f|
+        f.write(json)
+      end
+    rescue
+      puts 'Failed to save data file.'
+      puts $!.message
     end
 
-    def reload!
+    def load!
       data = JSON.parse(File.read(data_file))
 
       @restaurants = data['restaurants'].map { |r|
         Lunch::Restaurant.new(r)
       }
       
-      @groups = data['groups'].map { |g|
-        res = g['restaurant_ids'].map do |id|
+      @groups = data['groups'].map do |g|
+        res = g['restaurant_ids'].map { |id|
           find_restaurant_by_id(id)
-        end
+        }
 
-        Lunch::Group.new(r.merge(name: g.name, restaurants: res)
-      }
+        Lunch::Group.new(g.merge(name: g['name'], restaurants: res))
+      end
     rescue
+      raise if Lunch.env.development?
       puts 'Failed to load data file.'
       puts $!.message
       @restaurants = []
       @groups = []
     ensure
-      puts "#{@restaurants.size} restaurants and #{@groups.size} groups."
+      # puts "#{@restaurants.size} restaurants and #{@groups.size} groups."
     end
+
+    alias :reload! :load!
 
     def find_restaurant_by_id(id)
       @restaurants.find { |s| s.id == id }

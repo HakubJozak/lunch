@@ -3,39 +3,12 @@ require 'tty-prompt'
 
 
 module Lunch
-  class Prompt < TTY::Prompt
-    include Lunch::Lookup
-
-    def find_restaurant(name)
-      name ||= ask('Restaurant name?')
-
-      selected = select("Which one?") do |menu|
-        zomato.search(name).each do |r|
-          menu.choice r.to_s, r
-        end
-        
-        menu.choice '- Cancel -', nil
-      end
-    end
-
-    def new_group(name)
-      name ||= ask('Group name:')
-
-      picked = multi_select("Which restaurants?", per_page: 10) do |m|
-        store.restaurants.each do |r|
-          m.choice r.to_s, r
-        end
-      end
-
-      Lunch::Group.new(name: name, restaurants: name)
-    end
-  end
-
-
   class Cli
     include Lunch::Lookup
 
     def run(argv = ARGV)
+      store.load!
+
       case cmd = argv.shift
       when 'update'
         update_restaurants
@@ -50,6 +23,16 @@ module Lunch
       when 'add'
         r = Lunch::Prompt.new.find_restaurant(argv.shift)
         store.add_restaurant(r)
+
+      when 'list'
+        store.groups.each do |g|
+          puts g.name
+          puts '-----------------'
+          g.restaurants.each do |r|
+            puts r.name
+          end
+          puts "\n\n"
+        end
 
       when /sinfin|snfn|office|kancl|dlouha/
         Lunch::Offer.new.print_daily_menus(/Maitrea/, /La Casa Blů/) do |menu|

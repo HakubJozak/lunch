@@ -9,10 +9,20 @@ require_relative "lunch/lookup"
 require_relative "lunch/cli"
 require_relative "lunch/offer"
 require_relative "lunch/store"
+require_relative "lunch/prompt"
 
 
 require 'fileutils'
 
 
 module Lunch
+  class Environment < OpenStruct
+    def development?
+      name == :development
+    end
+  end
+  
+  def self.env
+    Lunch::Environment.new(name: :development)
+  end
 end

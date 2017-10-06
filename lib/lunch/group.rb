@@ -1,14 +1,11 @@
 module Lunch
   class Group < OpenStruct
-    def initialize(attrs)
-      super(attrs)
-      @store = store
+    def to_json(*args)
+      {
+        name: name,
+        restaurant_ids: restaurants.map(&:id)
+      }.to_json(*args)
     end
 
-    private :store
-
-    def restaurants
-      @restaurant.rb
-    end
   end
 end
