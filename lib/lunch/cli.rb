@@ -3,6 +3,35 @@ require 'tty-prompt'
 
 
 module Lunch
+  class Prompt < TTY::Prompt
+    include Lunch::Lookup
+
+    def find_restaurant(name)
+      name ||= ask('Restaurant name?')
+
+      selected = select("Which one?") do |menu|
+        zomato.search(name).each do |r|
+          menu.choice r.to_s, r
+        end
+        
+        menu.choice '- Cancel -', nil
+      end
+    end
+
+    def new_group(name)
+      name ||= ask('Group name:')
+
+      picked = multi_select("Which restaurants?", per_page: 10) do |m|
+        store.restaurants.each do |r|
+          m.choice r.to_s, r
+        end
+      end
+
+      Lunch::Group.new(name: name, restaurants: name)
+    end
+  end
+
+
   class Cli
     include Lunch::Lookup
 
@@ -12,11 +41,16 @@ module Lunch
         update_restaurants
         save_restaurants
         puts 'Restaurant list updated.'
-      when 'list'
-        
+
+      when 'group'
+        group = Lunch::Prompt.new.new_group(argv.shift)
+        store.groups << group
+        store.save!
+
       when 'add'
-        add_restaurant(argv.shift)
-        puts "Restaurant #{} added."
+        r = Lunch::Prompt.new.find_restaurant(argv.shift)
+        store.add_restaurant(r)
+
       when /sinfin|snfn|office|kancl|dlouha/
         Lunch::Offer.new.print_daily_menus(/Maitrea/, /La Casa Blů/) do |menu|
           puts menu
@@ -28,20 +62,15 @@ module Lunch
       end
     end
 
-    def add_restaurant(name = nil)
-      prompt = TTY::Prompt.new
-
-      selected = prompt.select("Which one?") do |menu|
-        zomato.search(name).each do |r|
-          address = r.location['address']
-          menu.choice "#{r.name} (#{address})", r
-        end
-        
-        menu.choice '- Cancel -', nil
-      end
-
-      store.add_restaurant(selected)
+    def create_group(name = nil)
+      prompt = Lunch::Prompt.new
+      restaurants = make_group
     end
+
+    def add_restaurant(name = nil)
+
+    end
+
     
 #    def save_vegies
 # File.open("data/vegetarian.json",'w') do |f|

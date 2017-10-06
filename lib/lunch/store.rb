@@ -27,10 +27,13 @@ module Lunch
         Lunch::Restaurant.new(r)
       }
       
-      @groups = data['groups'].map { |r|
-        Lunch::Group.new(r)
-      }
+      @groups = data['groups'].map { |g|
+        res = g['restaurant_ids'].map do |id|
+          find_restaurant_by_id(id)
+        end
 
+        Lunch::Group.new(r.merge(name: g.name, restaurants: res)
+      }
     rescue
       puts 'Failed to load data file.'
       puts $!.message
@@ -38,6 +41,10 @@ module Lunch
       @groups = []
     ensure
       puts "#{@restaurants.size} restaurants and #{@groups.size} groups."
+    end
+
+    def find_restaurant_by_id(id)
+      @restaurants.find { |s| s.id == id }
     end
 
     def add_restaurant(restaurant)
