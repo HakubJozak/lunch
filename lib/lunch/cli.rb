@@ -25,24 +25,9 @@ module Lunch
         store.add_restaurant(r)
 
       when 'list'
-        store.groups.each do |g|
-          puts g.name
-          puts '-----------------'
-          g.restaurants.each do |r|
-            puts r.name
-          end
-          puts "\n\n"
-        end
-
+        Lunch::Offer.new($stdout).list
       else
-        if group = store.find_group(cmd)
-          group.restaurants.each { |r|
-            r.print_daily_menu
-            puts "\n"
-          }
-        else
-          puts "Unknown group #{name}"
-        end
+        Lunch::Offer.new($stdout).print_daily_menu(group: cmd)
       end
     end
 

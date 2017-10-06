@@ -55,6 +55,10 @@ module Lunch
       @restaurants.find { |s| s.id == id }
     end
 
+    def default_group
+      @groups.first
+    end
+
     def find_group(name)
       @groups.find { |g| g.name == name }
     end
