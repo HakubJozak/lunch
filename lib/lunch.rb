@@ -6,6 +6,7 @@ require_relative "lunch/version"
 require_relative "lunch/lookup"
 require_relative "lunch/cli"
 require_relative "lunch/offer"
+require_relative "lunch/store"
 
 require 'fileutils'
 
