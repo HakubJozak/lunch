@@ -36,8 +36,10 @@ module Lunch
 
       else
         if group = store.find_group(cmd)
-          group.restaurants.each(&:print_daily_menu)
-          puts "\n\n"
+          group.restaurants.each { |r|
+            r.print_daily_menu
+            puts "\n"
+          }
         else
           puts "Unknown group #{name}"
         end
