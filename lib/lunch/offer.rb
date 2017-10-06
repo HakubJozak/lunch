@@ -35,6 +35,6 @@ module Lunch
         @out.puts 'No daily menu found.'
       end
     end
-    
+
   end
 end

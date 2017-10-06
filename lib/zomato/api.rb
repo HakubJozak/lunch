@@ -9,16 +9,22 @@ module Zomato
     default_params :format => 'json'
     # debug_output $stdout
 
-    def restaurant(query)
-      json = get('/search', query)
+    def search(query)
+      json = get('/search', q: query, city_id: 84)
 
-      if r = json['restaurants'].first
-        attrs = r['restaurant']
-        attrs.delete('apikey')
-        attrs
+      if found = json['restaurants']
+        found.map { |r|
+          attrs = r['restaurant']
+          attrs.delete('apikey')
+          Lunch::Restaurant.new(attrs)
+        }
       else
-        nil
+        []
       end
+    end
+
+    def find_restaurant(api)
+      18355481
     end
 
     def daily_menu(id)
@@ -56,7 +62,7 @@ module Zomato
     end
 
     def cities
-      get '/cities', q: 'Praha'      
+      get '/cities', q: 'Praha'
     end
 
     private

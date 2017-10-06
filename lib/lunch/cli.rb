@@ -1,4 +1,7 @@
 # coding: utf-8
+require 'tty-prompt'
+
+
 module Lunch
   class Cli
     include Lunch::Lookup
@@ -9,6 +12,8 @@ module Lunch
         update_restaurants
         save_restaurants
         puts 'Restaurant list updated.'
+      when 'list'
+        
       when 'add'
         add_restaurant(argv.shift)
         puts "Restaurant #{} added."
@@ -24,7 +29,18 @@ module Lunch
     end
 
     def add_restaurant(name = nil)
-      prompt = TTY::Prompt.new('Search for a restaurant to add', name)
+      prompt = TTY::Prompt.new
+
+      selected = prompt.select("Which one?") do |menu|
+        zomato.search(name).each do |r|
+          address = r.location['address']
+          menu.choice "#{r.name} (#{address})", r
+        end
+        
+        menu.choice '- Cancel -', nil
+      end
+
+      store.add_restaurant(selected)
     end
     
 #    def save_vegies
