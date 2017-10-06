@@ -55,6 +55,10 @@ module Lunch
       @restaurants.find { |s| s.id == id }
     end
 
+    def find_group(name)
+      @groups.find { |g| g.name == name }
+    end
+
     def add_restaurant(restaurant)
       return unless restaurant
       restaurants << restaurant
