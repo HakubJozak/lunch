@@ -4,8 +4,6 @@ require_relative "zomato/city"
 
 require_relative "lunch/version"
 require_relative "lunch/lookup"
-require_relative "lunch/restaurant"
-require_relative "lunch/group"
 require_relative "lunch/cli"
 require_relative "lunch/offer"
 require_relative "lunch/store_base"
@@ -42,6 +40,13 @@ end
 include Lunch::Config
 
 # FFS! ------------------------
+# The model classes have to be defined
+# after a DB connection is established.
+#
+
 DB = Sequel.connect("sqlite://#{data_file}")
-require_relative 'lunch/sql/models'
+require_relative "lunch/sql/restaurant"
+require_relative "lunch/sql/group"
+require_relative "lunch/sql/membership"
 # -----------------------------
+
