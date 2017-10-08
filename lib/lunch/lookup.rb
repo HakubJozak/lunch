@@ -8,16 +8,12 @@ module Lunch::Lookup
       end
     end
 
-    def restaurants
-
-    end
-
     def zomato
       @zomato ||= Zomato::Api.new
     end
 
     def store
-      @store ||= Lunch::Store.new
+      @store ||= Lunch::SqlStore.new
     end
 
     def update_restaurants

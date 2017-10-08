@@ -17,12 +17,11 @@ module Lunch
 
       when 'group'
         group = Lunch::Prompt.new.new_group(argv.shift)
-        store.groups << group
-        store.save!
+        store.create_group(g)
 
       when 'add'
         r = Lunch::Prompt.new.find_restaurant(argv.shift)
-        store.add_restaurant(r)
+        store.create_restaurant(r)
 
       when 'list'
         Lunch::Offer.new($stdout).list

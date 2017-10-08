@@ -8,7 +8,9 @@ require_relative "lunch/restaurant"
 require_relative "lunch/group"
 require_relative "lunch/cli"
 require_relative "lunch/offer"
+require_relative "lunch/store_base"
 require_relative "lunch/store"
+require_relative "lunch/sql_store"
 require_relative "lunch/prompt"
 
 

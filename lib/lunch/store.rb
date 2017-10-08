@@ -1,7 +1,5 @@
 module Lunch
-  class Store
-    attr_reader :restaurants, :groups
-
+  class Store < Lunch::StoreBase
     def initialize
       if File.exist?(data_file)
         reload!
@@ -63,7 +61,13 @@ module Lunch
       @groups.find { |g| g.name == name }
     end
 
-    def add_restaurant(restaurant)
+    def create_group(group)
+      groups << group
+      save!
+    end
+
+
+    def create_restaurant(restaurant)
       return unless restaurant
       restaurants << restaurant
       save!
@@ -71,20 +75,9 @@ module Lunch
 
     private
 
-    def config_dir
-      dir = "#{ENV['HOME']}/.config/lunch"      
-      FileUtils.mkdir_p(dir)
-      dir
-    end
-
     def data_file
       [ config_dir, 'restaurants.json' ].join('/')
     end
-
-
-    def config_file
-      [ config_dir, 'lunch.yaml' ].join('/')
-    end  
   end
 
 end

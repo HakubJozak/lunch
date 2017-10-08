@@ -34,8 +34,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "dotenv"
   spec.add_dependency "httparty"
   spec.add_dependency "tty-prompt"
-  # spec.add_dependency "sqlite3"
-  # spec.add_dependency "sequel"    
+  spec.add_dependency "sqlite3"
+  spec.add_dependency "sequel"    
 
   spec.add_runtime_dependency 'slack-ruby-bot'
   spec.add_runtime_dependency 'celluloid-io'
