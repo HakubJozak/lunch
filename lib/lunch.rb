@@ -45,8 +45,11 @@ include Lunch::Config
 #
 
 DB = Sequel.connect("sqlite://#{data_file}")
+require_relative "lunch/sql"
 require_relative "lunch/sql/restaurant"
 require_relative "lunch/sql/group"
 require_relative "lunch/sql/membership"
 # -----------------------------
+
+Lunch::Sql.create_schema?
 

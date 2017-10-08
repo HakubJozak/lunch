@@ -25,6 +25,11 @@ module Lunch
         end
       end
 
+      private
+
+      def json
+        @json ||= JSON.parse(raw)
+      end
     end
   end
 end

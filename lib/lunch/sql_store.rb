@@ -3,12 +3,6 @@ require 'sequel'
 
 module Lunch
   class SqlStore < Lunch::StoreBase
-    # TODO: to be implemented
-    def initialize
-      @db = DB
-      create_schema?
-    end
-
     def save!
       true
     end
@@ -33,18 +27,18 @@ module Lunch
       Sql::Group.all
     end
 
-    def create_group(g)
-      group = Sql::Group.find_or_create(name: g.name)
+    def create_group(name:, restaurants:)
+      group = Sql::Group.find_or_create(name: name)
 
-      g.restaurants.each do |r|
+      restaurants.each do |r|
         group.add_restaurant(r)
       end      
     end
     
     def create_restaurant(r)
-      Sql::Restaurant.find_or_create(id_zomato: r.id) do |n|
-        n.name = r.name
-        n.raw = r.to_h.to_json
+      Sql::Restaurant.find_or_create(id_zomato: r['id']) do |n|
+        n.name = r['name']
+        n.raw = r.to_json
       end
     end
 
@@ -53,34 +47,5 @@ module Lunch
     end
 
     alias reload! load!
-
-    private
-
-    # Create schema unless it exists.
-    def create_schema?
-      # @db.drop_table :restaurants
-      # @db.drop_table :groups
-      # @db.drop_table :memberships      
-      
-      @db.create_table? :restaurants do
-        primary_key :id
-        Integer :id_zomato
-        String :name
-        String :raw, text: true
-      end
-
-      @db.create_table? :groups do
-        primary_key :id
-        String :name
-      end
-
-      @db.create_table? :memberships do
-        primary_key :id
-        Integer :group_id
-        Integer :restaurant_id	
-      end
-
-      puts @db[:restaurants].count
-    end
   end
 end

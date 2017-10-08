@@ -6,8 +6,9 @@ module Lunch
       name ||= ask('Restaurant name?')
 
       selected = select("Which one?") do |menu|
-        zomato.search(name).each do |r|
-          menu.choice r.to_s, r
+        zomato.search(name).each do |attrs|
+          rest = store.create_restaurant(attrs)
+          menu.choice rest.to_s, rest
         end
         
         menu.choice '- Cancel -', nil
@@ -23,7 +24,7 @@ module Lunch
         end
       end
 
-      Lunch::Group.new(name: name, restaurants: picked)
+      store.create_group(name: name, restaurants: picked)
     end
   end
 end

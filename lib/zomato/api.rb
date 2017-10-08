@@ -16,7 +16,7 @@ module Zomato
         found.map { |r|
           attrs = r['restaurant']
           attrs.delete('apikey')
-          Lunch::Restaurant.new(attrs)
+          attrs
         }
       else
         []
