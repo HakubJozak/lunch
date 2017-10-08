@@ -5,6 +5,7 @@ module Lunch
   class SqlStore < Lunch::StoreBase
     # TODO: to be implemented
     def initialize
+      @db = DB
       create_schema?
     end
 
@@ -29,14 +30,15 @@ module Lunch
     end
 
     def default_group
+      Sql::Group.all
     end
 
     def create_group(g)
-      Sql::Group.find_or_create(name: g.name) do |n|
-        n.restaurants.each do |r|
-          g.add_restaurant(r)
-        end
-      end
+      group = Sql::Group.find_or_create(name: g.name)
+
+      g.restaurants.each do |r|
+        group.add_restaurant(r)
+      end      
     end
     
     def create_restaurant(r)
@@ -47,7 +49,7 @@ module Lunch
     end
 
     def find_group(name)
-      nil
+      Sql::Group.where(name: name).first
     end
 
     alias reload! load!
