@@ -17,7 +17,7 @@ module Lunch
 
       when 'group'
         group = Lunch::Prompt.new.new_group(argv.shift)
-        store.create_group(g)
+        store.create_group(group)
 
       when 'add'
         r = Lunch::Prompt.new.find_restaurant(argv.shift)

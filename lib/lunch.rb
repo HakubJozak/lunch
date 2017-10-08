@@ -12,12 +12,22 @@ require_relative "lunch/store_base"
 require_relative "lunch/store"
 require_relative "lunch/sql_store"
 require_relative "lunch/prompt"
-
-
 require 'fileutils'
 
 
 module Lunch
+  module Config
+    def data_file
+      [ config_dir, 'lunch.db' ].join('/')
+    end
+
+    def config_dir
+      dir = "#{ENV['HOME']}/.config/lunch"
+      FileUtils.mkdir_p(dir)
+      dir
+    end
+  end
+
   class Environment < OpenStruct
     def development?
       name == :development
@@ -28,3 +38,10 @@ module Lunch
     Lunch::Environment.new(name: :development)
   end
 end
+
+include Lunch::Config
+
+# FFS! ------------------------
+DB = Sequel.connect("sqlite://#{data_file}")
+require_relative 'lunch/sql/models'
+# -----------------------------

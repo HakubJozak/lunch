@@ -5,13 +5,6 @@ module Lunch
   class SqlStore < Lunch::StoreBase
     # TODO: to be implemented
     def initialize
-      @db = Sequel.connect("sqlite://#{data_file}")
-
-      # FFS! ------------------------
-      Sequel::Model.db = @db
-      require_relative 'sql/models'
-      # -----------------------------
-      
       create_schema?
     end
 
@@ -24,7 +17,7 @@ module Lunch
     end
 
     def groups
-      
+      Sql::Group.all
     end
 
     def restaurants
@@ -32,12 +25,18 @@ module Lunch
     end
 
     def find_restaurant_by_id(id)
+      Sql::Restaurant[id]      
     end
 
     def default_group
     end
 
     def create_group(g)
+      Sql::Group.find_or_create(name: g.name) do |n|
+        n.restaurants.each do |r|
+          g.add_restaurant(r)
+        end
+      end
     end
     
     def create_restaurant(r)
@@ -54,10 +53,6 @@ module Lunch
     alias reload! load!
 
     private
-
-    def data_file
-      [ config_dir, 'lunch.db' ].join('/')
-    end
 
     # Create schema unless it exists.
     def create_schema?
