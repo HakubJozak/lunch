@@ -7,6 +7,9 @@ module Lunch
     end
     
     def list
+      puts store.restaurants.map(&:name).join(', ')
+      puts "\n\n"
+
       store.groups.each do |g|
         puts g.name
         puts '-----------------'
@@ -19,7 +22,7 @@ module Lunch
 
     def print_daily_menu(group:)
       group = store.find_group(group) || store.default_group
-      
+
       if group
         group.restaurants.each { |r|
           r.print_daily_menu(@out)

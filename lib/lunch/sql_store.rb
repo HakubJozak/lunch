@@ -24,7 +24,7 @@ module Lunch
     end
 
     def default_group
-      Sql::Group.all
+      Sql::Group.first
     end
 
     def create_group(name:, restaurants:)

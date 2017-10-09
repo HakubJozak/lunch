@@ -7,7 +7,7 @@ module Lunch
       many_to_many :groups, join_table: :memberships
 
       def to_s
-        address = json['location']['address']
+        address = json['location']&.public_send(:[],'address')
         "#{name} (#{address})"
       end      
 

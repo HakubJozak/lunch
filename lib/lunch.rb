@@ -51,5 +51,5 @@ require_relative "lunch/sql/group"
 require_relative "lunch/sql/membership"
 # -----------------------------
 
-Lunch::Sql.create_schema?
+Lunch::Sql.create_schema
 
