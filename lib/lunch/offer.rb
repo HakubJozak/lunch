@@ -2,8 +2,8 @@ module Lunch
   class Offer
     include Lunch::Lookup
 
-    def initialize(out = nil)
-      @out = out || StringIO.new
+    def initialize(out)
+      @out = out
     end
     
     def list

@@ -16,16 +16,20 @@ module Lunch
         out.puts '---------------------------------------------'
 
         if menu = zomato.daily_menu(id_zomato)
-          menu['dishes'].each_with_index do |dish,i|
-            dish = OpenStruct.new(dish['dish'])
-            out.puts "#{i+1}) #{dish.name} - #{dish.price}"
-          end
+          dishes(menu)
+          out.puts "#{dish.name} - #{dish.price}"
         else
           out.puts 'No daily menu found.'
         end
       end
 
       private
+
+      def dishes(menu)
+        menu['dishes'].map do |dish|
+          OpenStruct.new(dish['dish'])
+        end        
+      end
 
       def json
         @json ||= JSON.parse(raw)
